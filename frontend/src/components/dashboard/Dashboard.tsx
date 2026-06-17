@@ -198,14 +198,15 @@ export const Dashboard: React.FC = () => {
                     <BarChart3 size={18} />
                     Results
                   </Link>
-                  <Link 
-                    to={`/form/${form.id}`}
+                  <a 
+                    href={`/form/${form.id}`}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="p-4 flex flex-col items-center justify-center text-sm font-bold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors gap-1"
                   >
                     <ExternalLink size={18} />
                     View Live
-                  </Link>
+                  </a>
                 </div>
               </div>
             ))}

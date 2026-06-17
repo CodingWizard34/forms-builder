@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store';
 import { updateField, removeField, setTheme } from '../../store/slices/builderSlice';
-import { Trash2, Settings2, Plus, X, AlignLeft, AlignCenter, AlignRight, Bold, Palette } from 'lucide-react';
+import { Trash2, AlignLeft, AlignCenter, AlignRight, Bold, Palette } from 'lucide-react';
 
 export const PropertiesPanel: React.FC = () => {
   const dispatch = useDispatch();

@@ -58,7 +58,7 @@ export const FormBuilder: React.FC = () => {
         throw new Error('Failed to save form');
       }
 
-      const data = await response.json();
+      await response.json();
       toast.success('Form saved successfully!');
     } catch (error) {
       console.error(error);

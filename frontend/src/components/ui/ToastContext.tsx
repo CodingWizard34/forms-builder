@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { CheckCircle2, XCircle, X } from 'lucide-react';
 
 interface Toast {
@@ -22,7 +22,7 @@ export const useToast = () => {
   return context;
 };
 
-export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const addToast = useCallback((message: string, type: 'success' | 'error') => {

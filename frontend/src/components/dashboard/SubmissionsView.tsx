@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Download, Users, Clock, Link as LinkIcon, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Download, Users, Clock, Link as LinkIcon } from 'lucide-react';
 import type { FormField } from '../../store/slices/builderSlice';
 import { getAuthHeaders } from '../../utils/auth';
 import { useToast } from '../ui/ToastContext';

@@ -5,7 +5,7 @@ import { COUNTRIES } from '../../utils/countries';
 import { useToast } from '../ui/ToastContext';
 import confetti from 'canvas-confetti';
 import type { RootState } from '../../store';
-import type { FormField, FormWorkflow, WorkflowGroup, WorkflowCondition } from '../../store/slices/builderSlice';
+import type { FormField, WorkflowGroup, WorkflowCondition } from '../../store/slices/builderSlice';
 
 interface PreviewFormProps {
   onClose?: () => void;

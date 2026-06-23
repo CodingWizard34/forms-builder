@@ -137,6 +137,10 @@ export const PreviewForm: React.FC<PreviewFormProps> = ({ onClose, formId }) => 
           origin: { y: 0.6 },
           colors: ['#3b82f6', '#10b981', '#f43f5e', '#8b5cf6']
         });
+        
+        setTimeout(() => {
+          if (!onClose) window.close();
+        }, 3500);
       } catch (error) {
         console.error(error);
         toast.error('Failed to submit form. Please try again.');
@@ -362,11 +366,11 @@ export const PreviewForm: React.FC<PreviewFormProps> = ({ onClose, formId }) => 
           <button 
             onClick={() => {
               if (onClose) onClose();
-              else window.location.reload();
+              else window.close();
             }}
             className="px-8 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors"
           >
-            {formId ? "Submit Another Response" : "Close Preview"}
+            {formId ? "Close Window" : "Close Preview"}
           </button>
         </div>
       </div>

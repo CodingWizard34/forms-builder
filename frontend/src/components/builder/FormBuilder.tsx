@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,11 +10,12 @@ import { PreviewForm } from './PreviewForm';
 import { LogicBuilder } from './LogicBuilder';
 import { Save, Eye, ArrowLeft, Edit2, LayoutTemplate, Workflow } from 'lucide-react';
 import type { RootState } from '../../store';
-import { updateTitle, setViewMode } from '../../store/slices/builderSlice';
+import { updateTitle, setViewMode, loadForm } from '../../store/slices/builderSlice';
 import { getAuthHeaders, removeToken } from '../../utils/auth';
 import { useToast } from '../ui/ToastContext';
 
 export const FormBuilder: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const toast = useToast();
@@ -27,16 +28,47 @@ export const FormBuilder: React.FC = () => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  useEffect(() => {
+    const fetchForm = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/forms/${id}`, {
+          headers: getAuthHeaders()
+        });
+        if (response.status === 401) {
+          removeToken();
+          navigate('/login');
+          return;
+        }
+        if (response.ok) {
+          const data = await response.json();
+          dispatch(loadForm({
+            title: data.title,
+            fields: data.fields,
+            workflows: data.workflows,
+            theme: data.theme || 'theme-blue'
+          }));
+        }
+      } catch (error) {
+        console.error("Failed to load existing form", error);
+      }
+    };
+
+    if (id) {
+      fetchForm();
+    }
+  }, [id, dispatch, navigate]);
+
   const handleSave = async () => {
     setIsSaving(true);
     try {
       // Build the payload mapping our Redux state to the FastAPI schema
       const payload = {
+        id: id,
         title: title,
         fields: fields,
         workflows: workflows,
         theme: theme,
-        is_published: false
+        is_published: true
       };
 
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/forms/`, {
@@ -59,10 +91,10 @@ export const FormBuilder: React.FC = () => {
       }
 
       await response.json();
-      toast.success('Form saved successfully!');
+      toast.success('Form published successfully!');
     } catch (error) {
       console.error(error);
-      toast.error('Failed to save form. Please try again.');
+      toast.error('Failed to publish form. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -136,7 +168,7 @@ export const FormBuilder: React.FC = () => {
               className={`flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl font-bold transition-all shadow-[0_8px_20px_-6px_rgba(59,130,246,0.5)] ${isSaving ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-0.5'}`}
             >
               <Save size={18} className={isSaving ? 'animate-pulse' : ''} /> 
-              {isSaving ? 'Saving...' : 'Save Form'}
+              {isSaving ? 'Publishing...' : 'Publish Form'}
             </button>
           </div>
         </header>

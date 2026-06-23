@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuthHeaders, removeToken } from '../../utils/auth';
-import { PlusCircle, FileText, Calendar, ExternalLink, BarChart3, Trash2, User, Link as LinkIcon, CheckCircle2 } from 'lucide-react';
+import { PlusCircle, FileText, Calendar, ExternalLink, BarChart3, Trash2, User, Link as LinkIcon, CheckCircle2, Edit2 } from 'lucide-react';
 import { useToast } from '../ui/ToastContext';
 
 interface FormSummary {
@@ -167,6 +167,11 @@ export const Dashboard: React.FC = () => {
                         <FileText size={24} />
                       </div>
                       <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">ID: {form.id}</span>
+                      {form.is_published ? (
+                        <span className="text-xs font-bold text-emerald-600 bg-emerald-100 px-2 py-1 rounded-md">Published</span>
+                      ) : (
+                        <span className="text-xs font-bold text-amber-600 bg-amber-100 px-2 py-1 rounded-md">Draft</span>
+                      )}
                     </div>
                     <button 
                       onClick={() => handleDelete(form.id, form.title)}
@@ -183,14 +188,21 @@ export const Dashboard: React.FC = () => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-3 border-t border-white/40 divide-x divide-white/40 bg-white/40">
+                <div className="grid grid-cols-4 border-t border-white/40 divide-x divide-white/40 bg-white/40">
                   <button 
                     onClick={() => handleCopyLink(form.id)}
                     className={`p-4 flex flex-col items-center justify-center text-sm font-bold transition-colors gap-1 ${copiedId === form.id ? 'text-emerald-600 bg-emerald-50' : 'text-slate-600 hover:text-emerald-600 hover:bg-emerald-50'}`}
                   >
                     {copiedId === form.id ? <CheckCircle2 size={18} /> : <LinkIcon size={18} />}
-                    {copiedId === form.id ? 'Copied!' : 'Copy Link'}
+                    {copiedId === form.id ? 'Copied!' : 'Copy'}
                   </button>
+                  <Link 
+                    to={`/builder/${form.id}`}
+                    className="p-4 flex flex-col items-center justify-center text-sm font-bold text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors gap-1"
+                  >
+                    <Edit2 size={18} />
+                    Edit
+                  </Link>
                   <Link 
                     to={`/dashboard/${form.id}/submissions`}
                     className="p-4 flex flex-col items-center justify-center text-sm font-bold text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors gap-1"

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadForm } from '../../store/slices/builderSlice';
 import type { RootState } from '../../store';
 import { PreviewForm } from './PreviewForm';
+import { Lock } from 'lucide-react';
 
 export const LiveFormView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,6 +12,7 @@ export const LiveFormView: React.FC = () => {
   const theme = useSelector((state: RootState) => state.builder.theme);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isPublished, setIsPublished] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -21,6 +23,12 @@ export const LiveFormView: React.FC = () => {
         }
         const data = await response.json();
         
+        setIsPublished(data.is_published);
+        if (data.is_published === false) {
+          setLoading(false);
+          return;
+        }
+
         // Hydrate Redux state with the fetched form
         dispatch(loadForm({
           title: data.title,
@@ -52,6 +60,21 @@ export const LiveFormView: React.FC = () => {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-xl font-bold text-red-500">{error}</div>
+      </div>
+    );
+  }
+
+  if (isPublished === false) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="bg-white p-12 rounded-3xl shadow-xl text-center max-w-md w-full relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-2 bg-amber-400" />
+          <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Lock size={40} className="text-amber-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">Form Unpublished</h2>
+          <p className="text-slate-500">This form is currently not accepting responses. Please contact the form owner if you believe this is a mistake.</p>
+        </div>
       </div>
     );
   }

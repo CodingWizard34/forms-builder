@@ -53,6 +53,7 @@ export interface BuilderState {
   workflows: FormWorkflow[];
   viewMode: ViewMode;
   theme: string;
+  is_published: boolean;
 }
 
 const initialState: BuilderState = {
@@ -62,12 +63,16 @@ const initialState: BuilderState = {
   workflows: [],
   viewMode: 'builder',
   theme: 'theme-blue',
+  is_published: false,
 };
 
 export const builderSlice = createSlice({
   name: 'builder',
   initialState,
   reducers: {
+    setIsPublished: (state, action: PayloadAction<boolean>) => {
+      state.is_published = action.payload;
+    },
     setViewMode: (state, action: PayloadAction<ViewMode>) => {
       state.viewMode = action.payload;
     },
@@ -118,13 +123,14 @@ export const builderSlice = createSlice({
     removeWorkflow: (state, action: PayloadAction<string>) => {
       state.workflows = state.workflows.filter(w => w.id !== action.payload);
     },
-    loadForm: (state, action: PayloadAction<{ title: string; fields: FormField[]; workflows: FormWorkflow[]; theme?: string }>) => {
+    loadForm: (state, action: PayloadAction<{ title: string; fields: FormField[]; workflows: FormWorkflow[]; theme?: string; is_published?: boolean }>) => {
       state.title = action.payload.title;
       state.fields = action.payload.fields;
       state.workflows = action.payload.workflows;
       if (action.payload.theme) {
         state.theme = action.payload.theme;
       }
+      state.is_published = action.payload.is_published || false;
       state.selectedFieldId = null;
       state.viewMode = 'builder';
     },
@@ -132,7 +138,7 @@ export const builderSlice = createSlice({
 });
 
 export const { 
-  setViewMode, updateTitle, setTheme, addField, updateField, removeField, 
+  setIsPublished, setViewMode, updateTitle, setTheme, addField, updateField, removeField, 
   reorderFields, selectField, addWorkflow, updateWorkflow, removeWorkflow, loadForm
 } = builderSlice.actions;
 export default builderSlice.reducer;

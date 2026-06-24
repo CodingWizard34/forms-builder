@@ -8,9 +8,9 @@ import { Canvas } from './Canvas';
 import { PropertiesPanel } from './PropertiesPanel';
 import { PreviewForm } from './PreviewForm';
 import { LogicBuilder } from './LogicBuilder';
-import { Save, Eye, ArrowLeft, Edit2, LayoutTemplate, Workflow } from 'lucide-react';
+import { Save, Eye, ArrowLeft, Edit2, LayoutTemplate, Workflow, Globe } from 'lucide-react';
 import type { RootState } from '../../store';
-import { updateTitle, setViewMode, loadForm } from '../../store/slices/builderSlice';
+import { updateTitle, setViewMode, loadForm, setIsPublished } from '../../store/slices/builderSlice';
 import { getAuthHeaders, removeToken } from '../../utils/auth';
 import { useToast } from '../ui/ToastContext';
 
@@ -24,6 +24,7 @@ export const FormBuilder: React.FC = () => {
   const fields = useSelector((state: RootState) => state.builder.fields);
   const workflows = useSelector((state: RootState) => state.builder.workflows);
   const theme = useSelector((state: RootState) => state.builder.theme);
+  const is_published = useSelector((state: RootState) => state.builder.is_published);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -45,7 +46,8 @@ export const FormBuilder: React.FC = () => {
             title: data.title,
             fields: data.fields,
             workflows: data.workflows,
-            theme: data.theme || 'theme-blue'
+            theme: data.theme || 'theme-blue',
+            is_published: data.is_published
           }));
         }
       } catch (error) {
@@ -58,17 +60,16 @@ export const FormBuilder: React.FC = () => {
     }
   }, [id, dispatch, navigate]);
 
-  const handleSave = async () => {
+  const handleSave = async (publishStatus: boolean) => {
     setIsSaving(true);
     try {
-      // Build the payload mapping our Redux state to the FastAPI schema
       const payload = {
         id: id,
         title: title,
         fields: fields,
         workflows: workflows,
         theme: theme,
-        is_published: true
+        is_published: publishStatus
       };
 
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/forms/`, {
@@ -91,10 +92,11 @@ export const FormBuilder: React.FC = () => {
       }
 
       await response.json();
-      toast.success('Form published successfully!');
+      dispatch(setIsPublished(publishStatus));
+      toast.success(publishStatus ? 'Form published successfully!' : 'Form unpublished successfully!');
     } catch (error) {
       console.error(error);
-      toast.error('Failed to publish form. Please try again.');
+      toast.error(publishStatus ? 'Failed to publish form. Please try again.' : 'Failed to unpublish form.');
     } finally {
       setIsSaving(false);
     }
@@ -162,12 +164,21 @@ export const FormBuilder: React.FC = () => {
               <Eye size={16} />
               Preview
             </button>
+            {is_published && (
+              <button 
+                onClick={() => handleSave(false)}
+                disabled={isSaving}
+                className={`flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-bold transition-all shadow-sm ${isSaving ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-0.5'}`}
+              >
+                Unpublish
+              </button>
+            )}
             <button 
-              onClick={handleSave}
+              onClick={() => handleSave(true)}
               disabled={isSaving}
               className={`flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl font-bold transition-all shadow-[0_8px_20px_-6px_rgba(59,130,246,0.5)] ${isSaving ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-0.5'}`}
             >
-              <Save size={18} className={isSaving ? 'animate-pulse' : ''} /> 
+              <Globe size={18} className={isSaving ? 'animate-pulse' : ''} /> 
               {isSaving ? 'Publishing...' : 'Publish Form'}
             </button>
           </div>

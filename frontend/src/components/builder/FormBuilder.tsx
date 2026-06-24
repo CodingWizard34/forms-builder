@@ -164,13 +164,15 @@ export const FormBuilder: React.FC = () => {
               <Eye size={16} />
               Preview
             </button>
-            <button 
-              onClick={() => handleSave(false)}
-              disabled={isSaving}
-              className={`flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-bold transition-all shadow-sm ${isSaving ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-0.5'}`}
-            >
-              Unpublish
-            </button>
+            {is_published && (
+              <button 
+                onClick={() => handleSave(false)}
+                disabled={isSaving}
+                className={`flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-bold transition-all shadow-sm ${isSaving ? 'opacity-70 cursor-not-allowed' : 'hover:-translate-y-0.5'}`}
+              >
+                Unpublish
+              </button>
+            )}
             <button 
               onClick={() => handleSave(true)}
               disabled={isSaving}

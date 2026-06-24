@@ -8,7 +8,7 @@ import { Canvas } from './Canvas';
 import { PropertiesPanel } from './PropertiesPanel';
 import { PreviewForm } from './PreviewForm';
 import { LogicBuilder } from './LogicBuilder';
-import { Save, Eye, ArrowLeft, Edit2, LayoutTemplate, Workflow, Globe } from 'lucide-react';
+import { Eye, ArrowLeft, Edit2, LayoutTemplate, Workflow, Globe } from 'lucide-react';
 import type { RootState } from '../../store';
 import { updateTitle, setViewMode, loadForm, setIsPublished } from '../../store/slices/builderSlice';
 import { getAuthHeaders, removeToken } from '../../utils/auth';

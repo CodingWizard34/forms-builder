@@ -412,6 +412,21 @@ export const PreviewForm: React.FC<PreviewFormProps> = ({ onClose, formId }) => 
 
         {/* Form Body */}
         <div className="flex-1 p-8 sm:p-12 overflow-y-auto">
+          {steps.length > 1 && (
+            <div className="max-w-2xl mx-auto mb-8">
+              <div className="flex justify-between text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">
+                <span>Step {currentStep + 1} of {steps.length}</span>
+                <span>{Math.round(((currentStep + 1) / steps.length) * 100)}% Completed</span>
+              </div>
+              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-primary-500 rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+                />
+              </div>
+            </div>
+          )}
+
           <form id="preview-form" onSubmit={handleSubmit} className="space-y-8 max-w-2xl mx-auto">
             {currentFields.length === 0 ? (
               <div className="text-center py-12 text-slate-400 font-medium">

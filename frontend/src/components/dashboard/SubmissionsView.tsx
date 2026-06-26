@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Download, Users, Clock, Link as LinkIcon } from 'lucide-react';
+import { ArrowLeft, Download, Users, Clock, Link as LinkIcon, BarChart3 } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { FormField } from '../../store/slices/builderSlice';
 import { getAuthHeaders } from '../../utils/auth';
 import { useToast } from '../ui/ToastContext';
@@ -122,6 +123,41 @@ export const SubmissionsView: React.FC = () => {
   // Get dynamic columns for the table
   const dataColumns = formMeta.fields.filter(f => !['page_break', 'html_block', 'divider', 'paragraph'].includes(f.type));
 
+  // Generate Chart Data
+  const generateChartData = () => {
+    if (!formMeta || submissions.length === 0) return [];
+    
+    const categoricalFields = formMeta.fields.filter(f => 
+      ['dropdown', 'radio', 'checkbox', 'single_checkbox', 'country'].includes(f.type)
+    );
+
+    return categoricalFields.map(field => {
+      const counts: Record<string, number> = {};
+      
+      submissions.forEach(sub => {
+        const answer = sub.answers[field.id];
+        if (answer === undefined || answer === null || answer === '') return;
+        
+        if (Array.isArray(answer)) {
+          answer.forEach(val => {
+            counts[val] = (counts[val] || 0) + 1;
+          });
+        } else {
+          const val = field.type === 'single_checkbox' ? (answer ? 'Checked' : 'Unchecked') : String(answer);
+          counts[val] = (counts[val] || 0) + 1;
+        }
+      });
+
+      const data = Object.entries(counts)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count);
+        
+      return { field, data };
+    }).filter(chart => chart.data.length > 0);
+  };
+
+  const chartData = generateChartData();
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
@@ -173,6 +209,53 @@ export const SubmissionsView: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Analytics Charts */}
+        {chartData.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <BarChart3 className="text-primary-500" /> 
+              Visual Analytics
+            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {chartData.map((chart, idx) => (
+                <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                  <h3 className="font-bold text-slate-700 mb-4">{chart.field.label || chart.field.type}</h3>
+                  <div className="h-64 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={chart.data} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                        <XAxis 
+                          dataKey="name" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: '#64748b', fontSize: 12 }} 
+                          dy={10}
+                        />
+                        <YAxis 
+                          allowDecimals={false} 
+                          axisLine={false} 
+                          tickLine={false} 
+                          tick={{ fill: '#64748b', fontSize: 12 }}
+                        />
+                        <Tooltip 
+                          cursor={{ fill: '#f1f5f9' }}
+                          contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)' }}
+                        />
+                        <Bar 
+                          dataKey="count" 
+                          fill="#3b82f6" 
+                          radius={[4, 4, 0, 0]} 
+                          barSize={40}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Data Table */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">

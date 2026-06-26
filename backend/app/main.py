@@ -7,6 +7,29 @@ from app.routers import forms, submissions, auth
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
+# Auto-migrate SQLite schema for the new columns (safe to fail if they already exist)
+from sqlalchemy import text
+try:
+    with engine.begin() as conn:
+        conn.execute(text("ALTER TABLE forms ADD COLUMN cover_image VARCHAR"))
+except Exception:
+    pass
+try:
+    with engine.begin() as conn:
+        conn.execute(text("ALTER TABLE forms ADD COLUMN logo VARCHAR"))
+except Exception:
+    pass
+try:
+    with engine.begin() as conn:
+        conn.execute(text("ALTER TABLE forms ADD COLUMN max_responses INTEGER"))
+except Exception:
+    pass
+try:
+    with engine.begin() as conn:
+        conn.execute(text("ALTER TABLE forms ADD COLUMN expires_at DATETIME"))
+except Exception:
+    pass
+
 app = FastAPI(title=settings.PROJECT_NAME)
 
 # Configure CORS for frontend integration

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { ChevronDown, CheckCircle2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { ChevronDown, CheckCircle2, ArrowLeft, ArrowRight, Trash2 } from 'lucide-react';
 import { COUNTRIES } from '../../utils/countries';
 import { useToast } from '../ui/ToastContext';
 import confetti from 'canvas-confetti';
@@ -320,6 +320,48 @@ export const PreviewForm: React.FC<PreviewFormProps> = ({ onClose, formId }) => 
           </div>
         );
       case 'file_upload':
+        const fileData = answers[field.id];
+        if (fileData) {
+          const isObject = typeof fileData === 'object';
+          const name = isObject ? fileData.name : fileData;
+          const type = isObject ? fileData.type : '';
+          const dataUrl = isObject ? fileData.dataUrl : null;
+          const size = isObject ? (fileData.size / 1024 / 1024).toFixed(2) + ' MB' : '';
+
+          let Icon = '📄';
+          if (type.includes('pdf')) Icon = '📕';
+          else if (type.includes('word') || type.includes('document')) Icon = '📘';
+          else if (type.includes('image')) Icon = '🖼️';
+          else if (type.includes('video')) Icon = '🎬';
+
+          return (
+            <div className="w-full relative p-4 border-2 border-solid border-primary-200 rounded-xl bg-primary-50 flex items-center justify-between group">
+              <div className="flex items-center gap-4 overflow-hidden">
+                {dataUrl ? (
+                  <div className="w-12 h-12 rounded bg-slate-200 shrink-0 overflow-hidden shadow-sm">
+                    <img src={dataUrl} alt="preview" className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-12 h-12 rounded bg-white shrink-0 flex items-center justify-center text-2xl shadow-sm border border-slate-200">
+                    {Icon}
+                  </div>
+                )}
+                <div className="flex flex-col truncate text-left">
+                  <span className="font-bold text-slate-800 truncate">{name}</span>
+                  {size && <span className="text-xs text-slate-500">{size}</span>}
+                </div>
+              </div>
+              <button 
+                type="button"
+                onClick={(e) => { e.preventDefault(); handleChange(field.id, null); }}
+                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          );
+        }
+
         return (
           <div className="w-full relative p-8 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 text-slate-500 text-center font-medium hover:bg-slate-100 hover:border-slate-400 transition-colors cursor-pointer flex flex-col items-center gap-2">
             <input 
@@ -328,11 +370,22 @@ export const PreviewForm: React.FC<PreviewFormProps> = ({ onClose, formId }) => 
               required={field.required}
               onChange={(e) => {
                 const file = e.target.files?.[0];
-                if (file) handleChange(field.id, file.name);
+                if (file) {
+                  if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      handleChange(field.id, { name: file.name, type: file.type, size: file.size, dataUrl: reader.result });
+                    };
+                    reader.readAsDataURL(file);
+                  } else {
+                    handleChange(field.id, { name: file.name, type: file.type, size: file.size });
+                  }
+                }
               }}
             />
-            <span className="text-2xl">📁</span>
-            <span className="truncate max-w-full px-4">{answers[field.id] ? answers[field.id] : 'Click or drag file to upload'}</span>
+            <span className="text-3xl mb-2">📁</span>
+            <span className="text-slate-600 font-bold">Click or drag file to upload</span>
+            <span className="text-xs text-slate-400">Supports PDF, Word, Images</span>
           </div>
         );
       case 'heading':

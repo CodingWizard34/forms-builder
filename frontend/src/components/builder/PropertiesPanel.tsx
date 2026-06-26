@@ -19,6 +19,17 @@ export const PropertiesPanel: React.FC = () => {
     { id: 'theme-violet', name: 'Violet', bgClass: 'bg-violet-500', borderClass: 'border-violet-200' }
   ];
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, key: 'cover_image' | 'logo') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        dispatch(updateSettings({ [key]: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   if (!selectedField) {
     return (
       <div className="w-80 bg-white/95 backdrop-blur-md border-l border-slate-200 flex flex-col h-full z-10 shadow-xl relative">
@@ -51,24 +62,34 @@ export const PropertiesPanel: React.FC = () => {
               <h4 className="text-sm font-bold text-slate-700">Custom Branding</h4>
             </div>
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-500">Cover Image URL</label>
+              <label className="block text-xs font-semibold text-slate-500">Cover Image</label>
               <input 
-                type="url" 
-                value={cover_image || ''} 
-                onChange={(e) => dispatch(updateSettings({ cover_image: e.target.value }))}
-                placeholder="https://..."
-                className="w-full p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 outline-none transition-all placeholder:text-slate-400"
+                type="file" 
+                accept="image/*"
+                onChange={(e) => handleImageUpload(e, 'cover_image')}
+                className="w-full text-sm text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer"
               />
+              {cover_image && (
+                <div className="flex items-center justify-between bg-slate-50 p-2 rounded-lg border border-slate-200 mt-2">
+                  <span className="text-[10px] text-green-600 font-bold flex items-center gap-1">✓ Image uploaded</span>
+                  <button onClick={() => dispatch(updateSettings({ cover_image: '' }))} className="text-[10px] text-red-500 font-bold hover:underline">Remove</button>
+                </div>
+              )}
             </div>
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-500">Logo URL</label>
+              <label className="block text-xs font-semibold text-slate-500">Logo Image</label>
               <input 
-                type="url" 
-                value={logo || ''} 
-                onChange={(e) => dispatch(updateSettings({ logo: e.target.value }))}
-                placeholder="https://..."
-                className="w-full p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 outline-none transition-all placeholder:text-slate-400"
+                type="file" 
+                accept="image/*"
+                onChange={(e) => handleImageUpload(e, 'logo')}
+                className="w-full text-sm text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer"
               />
+              {logo && (
+                <div className="flex items-center justify-between bg-slate-50 p-2 rounded-lg border border-slate-200 mt-2">
+                  <span className="text-[10px] text-green-600 font-bold flex items-center gap-1">✓ Logo uploaded</span>
+                  <button onClick={() => dispatch(updateSettings({ logo: '' }))} className="text-[10px] text-red-500 font-bold hover:underline">Remove</button>
+                </div>
+              )}
             </div>
           </div>
 

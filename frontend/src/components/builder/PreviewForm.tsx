@@ -335,29 +335,37 @@ export const PreviewForm: React.FC<PreviewFormProps> = ({ onClose, formId }) => 
           else if (type.includes('video')) Icon = '🎬';
 
           return (
-            <div className="w-full relative p-4 border-2 border-solid border-primary-200 rounded-xl bg-primary-50 flex items-center justify-between group">
-              <div className="flex items-center gap-4 overflow-hidden">
-                {dataUrl ? (
-                  <div className="w-12 h-12 rounded bg-slate-200 shrink-0 overflow-hidden shadow-sm">
-                    <img src={dataUrl} alt="preview" className="w-full h-full object-cover" />
+            <div className="flex flex-col gap-3">
+              <div className="w-full relative p-4 border-2 border-solid border-primary-200 rounded-xl bg-primary-50 flex items-center justify-between group">
+                <div className="flex items-center gap-4 overflow-hidden">
+                  {dataUrl && type.includes('image') ? (
+                    <div className="w-12 h-12 rounded bg-slate-200 shrink-0 overflow-hidden shadow-sm">
+                      <img src={dataUrl} alt="preview" className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="w-12 h-12 rounded bg-white shrink-0 flex items-center justify-center text-2xl shadow-sm border border-slate-200">
+                      {Icon}
+                    </div>
+                  )}
+                  <div className="flex flex-col truncate text-left">
+                    <span className="font-bold text-slate-800 truncate">{name}</span>
+                    {size && <span className="text-xs text-slate-500">{size}</span>}
                   </div>
-                ) : (
-                  <div className="w-12 h-12 rounded bg-white shrink-0 flex items-center justify-center text-2xl shadow-sm border border-slate-200">
-                    {Icon}
-                  </div>
-                )}
-                <div className="flex flex-col truncate text-left">
-                  <span className="font-bold text-slate-800 truncate">{name}</span>
-                  {size && <span className="text-xs text-slate-500">{size}</span>}
                 </div>
+                <button 
+                  type="button"
+                  onClick={(e) => { e.preventDefault(); handleChange(field.id, null); }}
+                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                  <Trash2 size={18} />
+                </button>
               </div>
-              <button 
-                type="button"
-                onClick={(e) => { e.preventDefault(); handleChange(field.id, null); }}
-                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-              >
-                <Trash2 size={18} />
-              </button>
+
+              {type.includes('pdf') && dataUrl && (
+                <div className="w-full h-[500px] rounded-xl border border-slate-200 overflow-hidden bg-slate-50 shadow-inner">
+                  <iframe src={dataUrl} className="w-full h-full" title="PDF Preview" />
+                </div>
+              )}
             </div>
           );
         }
@@ -371,7 +379,7 @@ export const PreviewForm: React.FC<PreviewFormProps> = ({ onClose, formId }) => 
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
-                  if (file.type.startsWith('image/')) {
+                  if (file.type.startsWith('image/') || file.type === 'application/pdf') {
                     const reader = new FileReader();
                     reader.onloadend = () => {
                       handleChange(field.id, { name: file.name, type: file.type, size: file.size, dataUrl: reader.result });

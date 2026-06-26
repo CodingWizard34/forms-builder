@@ -25,6 +25,7 @@ export const FormBuilder: React.FC = () => {
   const workflows = useSelector((state: RootState) => state.builder.workflows);
   const theme = useSelector((state: RootState) => state.builder.theme);
   const is_published = useSelector((state: RootState) => state.builder.is_published);
+  const { cover_image, logo, max_responses, expires_at } = useSelector((state: RootState) => state.builder);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -47,7 +48,11 @@ export const FormBuilder: React.FC = () => {
             fields: data.fields,
             workflows: data.workflows,
             theme: data.theme || 'theme-blue',
-            is_published: data.is_published
+            is_published: data.is_published,
+            cover_image: data.cover_image,
+            logo: data.logo,
+            max_responses: data.max_responses,
+            expires_at: data.expires_at
           }));
         }
       } catch (error) {
@@ -69,7 +74,11 @@ export const FormBuilder: React.FC = () => {
         fields: fields,
         workflows: workflows,
         theme: theme,
-        is_published: publishStatus
+        is_published: publishStatus,
+        cover_image,
+        logo,
+        max_responses,
+        expires_at
       };
 
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/forms/`, {

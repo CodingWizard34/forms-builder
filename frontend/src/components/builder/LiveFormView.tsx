@@ -13,6 +13,7 @@ export const LiveFormView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isPublished, setIsPublished] = useState<boolean | null>(null);
+  const [closedReason, setClosedReason] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -29,12 +30,29 @@ export const LiveFormView: React.FC = () => {
           return;
         }
 
+        const isFull = data.max_responses !== null && data.submission_count >= data.max_responses;
+        const isExpired = data.expires_at !== null && new Date() > new Date(data.expires_at);
+
+        if (isFull) {
+          setClosedReason("This form has reached its maximum number of allowed responses.");
+          setLoading(false);
+          return;
+        }
+
+        if (isExpired) {
+          setClosedReason("This form is no longer accepting responses as it has expired.");
+          setLoading(false);
+          return;
+        }
+
         // Hydrate Redux state with the fetched form
         dispatch(loadForm({
           title: data.title,
           fields: data.fields,
           workflows: data.workflows,
-          theme: data.theme || 'theme-blue'
+          theme: data.theme || 'theme-blue',
+          cover_image: data.cover_image,
+          logo: data.logo
         }));
       } catch (err: any) {
         setError(err.message);
@@ -74,6 +92,21 @@ export const LiveFormView: React.FC = () => {
           </div>
           <h2 className="text-2xl font-bold text-slate-800 mb-4">Form Unpublished</h2>
           <p className="text-slate-500">This form is currently not accepting responses. Please contact the form owner if you believe this is a mistake.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (closedReason) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="bg-white p-12 rounded-3xl shadow-xl text-center max-w-md w-full relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-2 bg-slate-400" />
+          <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Lock size={40} className="text-slate-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">Form Closed</h2>
+          <p className="text-slate-500">{closedReason}</p>
         </div>
       </div>
     );

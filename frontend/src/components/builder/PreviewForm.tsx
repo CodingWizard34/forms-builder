@@ -15,6 +15,7 @@ interface PreviewFormProps {
 export const PreviewForm: React.FC<PreviewFormProps> = ({ onClose, formId }) => {
   const fields = useSelector((state: RootState) => state.builder.fields);
   const workflows = useSelector((state: RootState) => state.builder.workflows);
+  const { cover_image, logo } = useSelector((state: RootState) => state.builder);
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -388,9 +389,39 @@ export const PreviewForm: React.FC<PreviewFormProps> = ({ onClose, formId }) => 
   return (
     <div className={containerClass}>
       <div className={formBoxClass}>
-        {/* Header */}
-        <div className={`px-8 py-6 border-b border-white/50 flex items-center justify-between sticky top-0 z-10 ${formId ? 'bg-white/40' : 'bg-white'}`}>
-          <div>
+        
+        {/* Cover Image */}
+        {cover_image && (
+          <div className="w-full h-48 sm:h-64 relative bg-slate-100 shrink-0">
+            <img 
+              src={cover_image} 
+              alt="Form Cover" 
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // Fallback if image fails to load
+                (e.target as HTMLImageElement).style.display = 'none';
+              }}
+            />
+          </div>
+        )}
+
+        {/* Header with Logo */}
+        <div className={`px-8 py-6 flex items-center justify-between sticky top-0 z-10 ${formId ? 'bg-white/90 backdrop-blur-md border-b border-white/50' : 'bg-white border-b border-slate-200'} ${cover_image && logo ? 'pt-14' : ''}`}>
+          
+          {logo && (
+            <div className={`absolute ${cover_image ? '-top-12' : 'top-4'} left-8 w-24 h-24 rounded-full border-4 border-white bg-white shadow-md overflow-hidden flex items-center justify-center`}>
+              <img 
+                src={logo} 
+                alt="Form Logo" 
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            </div>
+          )}
+
+          <div className={`${logo && !cover_image ? 'pl-28' : ''} ${logo && cover_image ? 'mt-2' : ''}`}>
             <h2 className="text-2xl font-extrabold text-slate-800">
               {formId ? "Submit Form" : "Preview Form"}
             </h2>

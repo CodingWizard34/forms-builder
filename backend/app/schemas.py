@@ -20,6 +20,10 @@ class FormBase(BaseModel):
     fields: List[Dict[str, Any]] = []
     workflows: List[Dict[str, Any]] = []
     theme: Optional[str] = "theme-blue"
+    cover_image: Optional[str] = None
+    logo: Optional[str] = None
+    max_responses: Optional[int] = None
+    expires_at: Optional[datetime] = None
     is_published: bool = False
 
 class FormCreate(FormBase):
@@ -33,6 +37,7 @@ class FormResponse(FormBase):
     user_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
+    submission_count: Optional[int] = 0
     class Config:
         from_attributes = True
 

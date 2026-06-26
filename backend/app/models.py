@@ -24,6 +24,11 @@ class Form(Base):
     workflows = Column(JSON, default=[])
     theme = Column(String, default="theme-blue")
     
+    cover_image = Column(String, nullable=True)
+    logo = Column(String, nullable=True)
+    max_responses = Column(Integer, nullable=True)
+    expires_at = Column(DateTime, nullable=True)
+    
     is_published = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

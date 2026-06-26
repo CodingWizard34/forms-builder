@@ -54,6 +54,10 @@ export interface BuilderState {
   viewMode: ViewMode;
   theme: string;
   is_published: boolean;
+  cover_image?: string;
+  logo?: string;
+  max_responses?: number;
+  expires_at?: string;
 }
 
 const initialState: BuilderState = {
@@ -64,6 +68,10 @@ const initialState: BuilderState = {
   viewMode: 'builder',
   theme: 'theme-blue',
   is_published: false,
+  cover_image: undefined,
+  logo: undefined,
+  max_responses: undefined,
+  expires_at: undefined,
 };
 
 export const builderSlice = createSlice({
@@ -123,7 +131,7 @@ export const builderSlice = createSlice({
     removeWorkflow: (state, action: PayloadAction<string>) => {
       state.workflows = state.workflows.filter(w => w.id !== action.payload);
     },
-    loadForm: (state, action: PayloadAction<{ title: string; fields: FormField[]; workflows: FormWorkflow[]; theme?: string; is_published?: boolean }>) => {
+    loadForm: (state, action: PayloadAction<{ title: string; fields: FormField[]; workflows: FormWorkflow[]; theme?: string; is_published?: boolean; cover_image?: string; logo?: string; max_responses?: number; expires_at?: string; }>) => {
       state.title = action.payload.title;
       state.fields = action.payload.fields;
       state.workflows = action.payload.workflows;
@@ -131,14 +139,24 @@ export const builderSlice = createSlice({
         state.theme = action.payload.theme;
       }
       state.is_published = action.payload.is_published || false;
+      state.cover_image = action.payload.cover_image;
+      state.logo = action.payload.logo;
+      state.max_responses = action.payload.max_responses;
+      state.expires_at = action.payload.expires_at;
       state.selectedFieldId = null;
       state.viewMode = 'builder';
     },
+    updateSettings: (state, action: PayloadAction<{ cover_image?: string; logo?: string; max_responses?: number; expires_at?: string; }>) => {
+      if (action.payload.cover_image !== undefined) state.cover_image = action.payload.cover_image;
+      if (action.payload.logo !== undefined) state.logo = action.payload.logo;
+      if (action.payload.max_responses !== undefined) state.max_responses = action.payload.max_responses;
+      if (action.payload.expires_at !== undefined) state.expires_at = action.payload.expires_at;
+    }
   },
 });
 
 export const { 
   setIsPublished, setViewMode, updateTitle, setTheme, addField, updateField, removeField, 
-  reorderFields, selectField, addWorkflow, updateWorkflow, removeWorkflow, loadForm
+  reorderFields, selectField, addWorkflow, updateWorkflow, removeWorkflow, loadForm, updateSettings
 } = builderSlice.actions;
 export default builderSlice.reducer;

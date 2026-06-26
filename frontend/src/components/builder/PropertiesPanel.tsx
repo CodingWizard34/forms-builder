@@ -1,14 +1,15 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store';
-import { updateField, removeField, setTheme } from '../../store/slices/builderSlice';
-import { Trash2, AlignLeft, AlignCenter, AlignRight, Bold, Palette } from 'lucide-react';
+import { updateField, removeField, setTheme, updateSettings } from '../../store/slices/builderSlice';
+import { Trash2, AlignLeft, AlignCenter, AlignRight, Bold, Palette, Image as ImageIcon, Settings } from 'lucide-react';
 
 export const PropertiesPanel: React.FC = () => {
   const dispatch = useDispatch();
   const selectedFieldId = useSelector((state: RootState) => state.builder.selectedFieldId);
   const fields = useSelector((state: RootState) => state.builder.fields);
   const theme = useSelector((state: RootState) => state.builder.theme);
+  const { cover_image, logo, max_responses, expires_at } = useSelector((state: RootState) => state.builder);
   const selectedField = fields.find((f) => f.id === selectedFieldId);
 
   const THEMES = [
@@ -42,6 +43,59 @@ export const PropertiesPanel: React.FC = () => {
               ))}
             </div>
             <p className="text-xs text-slate-400 mt-4 leading-relaxed">Changes apply instantly to the builder and live public forms.</p>
+          </div>
+
+          <div className="pt-6 border-t border-slate-100 space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <ImageIcon size={16} className="text-slate-400" />
+              <h4 className="text-sm font-bold text-slate-700">Custom Branding</h4>
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-slate-500">Cover Image URL</label>
+              <input 
+                type="url" 
+                value={cover_image || ''} 
+                onChange={(e) => dispatch(updateSettings({ cover_image: e.target.value }))}
+                placeholder="https://..."
+                className="w-full p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 outline-none transition-all placeholder:text-slate-400"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-slate-500">Logo URL</label>
+              <input 
+                type="url" 
+                value={logo || ''} 
+                onChange={(e) => dispatch(updateSettings({ logo: e.target.value }))}
+                placeholder="https://..."
+                className="w-full p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 outline-none transition-all placeholder:text-slate-400"
+              />
+            </div>
+          </div>
+
+          <div className="pt-6 border-t border-slate-100 space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Settings size={16} className="text-slate-400" />
+              <h4 className="text-sm font-bold text-slate-700">Submission Limits</h4>
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-slate-500">Max Responses</label>
+              <input 
+                type="number" 
+                value={max_responses || ''} 
+                onChange={(e) => dispatch(updateSettings({ max_responses: e.target.value ? parseInt(e.target.value) : undefined }))}
+                placeholder="Unlimited"
+                className="w-full p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 outline-none transition-all placeholder:text-slate-400"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-slate-500">Expiration Date</label>
+              <input 
+                type="datetime-local" 
+                value={expires_at ? expires_at.slice(0, 16) : ''} 
+                onChange={(e) => dispatch(updateSettings({ expires_at: e.target.value ? new Date(e.target.value).toISOString() : undefined }))}
+                className="w-full p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500/50 outline-none transition-all text-slate-700"
+              />
+            </div>
           </div>
         </div>
       </div>

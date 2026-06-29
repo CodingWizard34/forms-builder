@@ -7,7 +7,7 @@ export type FieldType =
   | 'rating' | 'divider' | 'page_break' | 'file_upload' 
   | 'time' | 'website' | 'address' | 'heading' | 'paragraph' | 'country';
 
-export type LogicOperator = 'equals' | 'not_equals' | 'contains' | 'greater_than' | 'less_than';
+export type LogicOperator = 'equals' | 'not_equals' | 'contains' | 'greater_than' | 'less_than' | 'is_filled' | 'is_empty';
 
 export interface WorkflowCondition {
   id: string;

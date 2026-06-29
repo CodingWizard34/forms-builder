@@ -268,15 +268,19 @@ const ConditionGroupNode: React.FC<{
                     <option value="contains">Contains</option>
                     <option value="greater_than">Is greater than</option>
                     <option value="less_than">Is less than</option>
+                    <option value="is_filled">Is filled</option>
+                    <option value="is_empty">Is empty</option>
                   </select>
 
-                  <input 
-                    type="text" 
-                    value={node.value}
-                    onChange={(e) => updateCondition(index, { value: e.target.value })}
-                    placeholder="Value..."
-                    className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 text-sm font-medium text-slate-800 outline-none focus:border-primary-500 focus:bg-white placeholder:text-slate-400 transition-all shadow-inner"
-                  />
+                  {!['is_filled', 'is_empty'].includes(node.operator) && (
+                    <input 
+                      type="text" 
+                      value={node.value}
+                      onChange={(e) => updateCondition(index, { value: e.target.value })}
+                      placeholder="Value..."
+                      className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 text-sm font-medium text-slate-800 outline-none focus:border-primary-500 focus:bg-white placeholder:text-slate-400 transition-all shadow-inner"
+                    />
+                  )}
 
                   <button onClick={() => removeCondition(index)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                     <X size={16} />

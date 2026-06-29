@@ -32,6 +32,8 @@ export const PreviewForm: React.FC<PreviewFormProps> = ({ onClose, formId }) => 
       case 'contains': return answer.toString().toLowerCase().includes(compareValue.toLowerCase());
       case 'greater_than': return Number(answer) > Number(compareValue);
       case 'less_than': return Number(answer) < Number(compareValue);
+      case 'is_filled': return answer !== undefined && answer.toString().trim() !== '';
+      case 'is_empty': return answer === undefined || answer.toString().trim() === '';
       default: return false;
     }
   };

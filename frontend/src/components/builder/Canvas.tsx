@@ -98,7 +98,7 @@ const CanvasItem: React.FC<CanvasItemProps> = ({ field, index }) => {
         )}
 
         <div className={isStaticContent ? '' : 'mt-3 opacity-90'}>
-          {['text', 'email', 'number', 'website'].includes(field.type) && (
+          {['text', 'email', 'number', 'website', 'date', 'time'].includes(field.type) && (
             <input type={field.type === 'website' ? 'url' : field.type} disabled placeholder={field.placeholder || ''} className="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 cursor-not-allowed placeholder:text-slate-400" />
           )}
 

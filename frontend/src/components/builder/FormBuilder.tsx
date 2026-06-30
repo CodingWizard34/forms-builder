@@ -43,6 +43,17 @@ export const FormBuilder: React.FC = () => {
         }
         if (response.ok) {
           const data = await response.json();
+          
+          const savedDraft = localStorage.getItem(`form_draft_${id}`);
+          if (savedDraft) {
+            if (window.confirm("You have an unsaved draft of this form. Do you want to restore it?")) {
+              dispatch(loadForm(JSON.parse(savedDraft)));
+              return;
+            } else {
+              localStorage.removeItem(`form_draft_${id}`);
+            }
+          }
+
           dispatch(loadForm({
             title: data.title,
             fields: data.fields,
@@ -64,6 +75,32 @@ export const FormBuilder: React.FC = () => {
       fetchForm();
     }
   }, [id, dispatch, navigate]);
+
+  // Auto-save draft hook
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
+  
+  useEffect(() => {
+    // Only start autosaving after a short delay to prevent overwriting the DB load with empty states
+    const timer = setTimeout(() => setInitialLoadDone(true), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (id && initialLoadDone) {
+      const draft = {
+        title,
+        fields,
+        workflows,
+        theme,
+        is_published,
+        cover_image,
+        logo,
+        max_responses,
+        expires_at
+      };
+      localStorage.setItem(`form_draft_${id}`, JSON.stringify(draft));
+    }
+  }, [id, initialLoadDone, title, fields, workflows, theme, is_published, cover_image, logo, max_responses, expires_at]);
 
   const handleSave = async (publishStatus: boolean) => {
     setIsSaving(true);
@@ -101,6 +138,7 @@ export const FormBuilder: React.FC = () => {
       }
 
       await response.json();
+      localStorage.removeItem(`form_draft_${id}`);
       dispatch(setIsPublished(publishStatus));
       toast.success(publishStatus ? 'Form published successfully!' : 'Form unpublished successfully!');
     } catch (error) {

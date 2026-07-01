@@ -101,22 +101,22 @@ export const Settings: React.FC = () => {
   if (isLoading) return <div className="flex h-screen items-center justify-center">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      <header className="h-16 bg-white border-b border-slate-200 flex items-center px-6">
-        <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-medium">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col font-sans transition-colors duration-300">
+      <header className="h-16 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center px-6 transition-colors duration-300">
+        <button onClick={() => navigate('/dashboard')} className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-medium">
           <ArrowLeft size={18} /> Back to Dashboard
         </button>
-        <h1 className="text-xl font-bold text-slate-800 ml-8">Settings</h1>
+        <h1 className="text-xl font-bold text-slate-800 dark:text-white ml-8">Settings</h1>
       </header>
 
       <div className="flex flex-1 overflow-hidden max-w-7xl mx-auto w-full">
         {/* Left Sidebar */}
-        <aside className="w-64 border-r border-slate-200 p-6 bg-white h-full hidden md:block">
+        <aside className="w-64 border-r border-slate-200 dark:border-slate-700 p-6 bg-white dark:bg-slate-800 h-full hidden md:block transition-colors duration-300">
           <nav className="space-y-1">
             {menuItems.map((item, idx) => (
               <button 
                 key={idx}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-medium text-sm ${item.active ? 'bg-primary-50 text-primary-700' : 'text-slate-600 hover:bg-slate-50'}`}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-medium text-sm ${item.active ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
               >
                 <div className="flex items-center gap-3">
                   {item.icon}
@@ -129,73 +129,73 @@ export const Settings: React.FC = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-8 md:p-12 bg-white">
+        <main className="flex-1 overflow-y-auto p-8 md:p-12 bg-white dark:bg-slate-800 transition-colors duration-300">
           <div className="max-w-2xl">
-            <h2 className="text-3xl font-bold text-slate-900 mb-8">My profile</h2>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">My profile</h2>
             
             <div className="flex items-center gap-4 mb-10">
-              <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 text-2xl font-bold">
+              <div className="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-700 dark:text-primary-400 text-2xl font-bold">
                 {profile.first_name ? profile.first_name.charAt(0).toUpperCase() : profile.email.charAt(0).toUpperCase()}
               </div>
               <div>
-                <button className="text-primary-600 font-medium text-sm hover:underline">Edit Gravatar</button>
+                <button className="text-primary-600 dark:text-primary-400 font-medium text-sm hover:underline">Edit Gravatar</button>
               </div>
             </div>
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Email (required)</label>
-                <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                  <span className="text-slate-700 font-medium">{profile.email}</span>
-                  <button className="text-sm font-bold text-slate-500 hover:text-slate-800 uppercase tracking-wide">Change Email</button>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Email (required)</label>
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl">
+                  <span className="text-slate-700 dark:text-slate-300 font-medium">{profile.email}</span>
+                  <button className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white uppercase tracking-wide">Change Email</button>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Password (required)</label>
-                <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl">
-                  <span className="text-slate-400 font-bold tracking-widest">••••••••</span>
-                  <button className="text-sm font-bold text-slate-500 hover:text-slate-800 uppercase tracking-wide">Change Password</button>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Password (required)</label>
+                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl">
+                  <span className="text-slate-400 dark:text-slate-500 font-bold tracking-widest">••••••••</span>
+                  <button className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white uppercase tracking-wide">Change Password</button>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">First name</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">First name</label>
                   <input 
                     type="text" 
                     value={profile.first_name}
                     onChange={e => setProfile({...profile, first_name: e.target.value})}
-                    className="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all text-slate-800"
+                    className="w-full p-4 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all text-slate-800 dark:text-white bg-white dark:bg-slate-900/50"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Last name</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Last name</label>
                   <input 
                     type="text" 
                     value={profile.last_name}
                     onChange={e => setProfile({...profile, last_name: e.target.value})}
-                    className="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all text-slate-800"
+                    className="w-full p-4 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all text-slate-800 dark:text-white bg-white dark:bg-slate-900/50"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Company</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Company</label>
                 <input 
                   type="text" 
                   value={profile.company}
                   onChange={e => setProfile({...profile, company: e.target.value})}
-                  className="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all text-slate-800"
+                  className="w-full p-4 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all text-slate-800 dark:text-white bg-white dark:bg-slate-900/50"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Role</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Role</label>
                 <select 
                   value={profile.role}
                   onChange={e => setProfile({...profile, role: e.target.value})}
-                  className="w-full p-4 border border-slate-200 rounded-xl outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all text-slate-800 appearance-none bg-white"
+                  className="w-full p-4 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all text-slate-800 dark:text-white appearance-none bg-white dark:bg-slate-900/50"
                 >
                   <option value="">Select Role...</option>
                   <option value="Engineering">Engineering</option>

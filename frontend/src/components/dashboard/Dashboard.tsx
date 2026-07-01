@@ -109,22 +109,22 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8 sm:p-12 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-8 sm:p-12 relative overflow-hidden transition-colors duration-300">
       {/* Decorative background gradients */}
-      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary-200/60 rounded-full mix-blend-multiply filter blur-3xl pointer-events-none animate-blob" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-indigo-200/60 rounded-full mix-blend-multiply filter blur-3xl pointer-events-none animate-blob animation-delay-2000" />
-      <div className="absolute top-[20%] left-[20%] w-96 h-96 bg-purple-200/60 rounded-full mix-blend-multiply filter blur-3xl pointer-events-none animate-blob animation-delay-4000" />
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary-200/60 dark:bg-primary-900/40 rounded-full mix-blend-multiply filter blur-3xl pointer-events-none animate-blob" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-indigo-200/60 dark:bg-indigo-900/40 rounded-full mix-blend-multiply filter blur-3xl pointer-events-none animate-blob animation-delay-2000" />
+      <div className="absolute top-[20%] left-[20%] w-96 h-96 bg-purple-200/60 dark:bg-purple-900/40 rounded-full mix-blend-multiply filter blur-3xl pointer-events-none animate-blob animation-delay-4000" />
 
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-6">
           <div>
-            <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight">My Forms</h1>
-            <p className="text-slate-500 font-medium mt-2">Manage your forms and view submissions</p>
+            <h1 className="text-4xl font-extrabold text-slate-800 dark:text-white tracking-tight">My Forms</h1>
+            <p className="text-slate-500 dark:text-slate-400 font-medium mt-2">Manage your forms and view submissions</p>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <ThemeToggle />
             {user && (
-              <button onClick={() => navigate('/settings')} className="flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 font-medium hover:bg-slate-50 transition-colors">
+              <button onClick={() => navigate('/settings')} className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                 <User size={18} className="text-primary-500" />
                 <span>{user.email}</span>
               </button>
@@ -151,17 +151,17 @@ export const Dashboard: React.FC = () => {
         {/* Analytics Cards */}
         {analytics && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><FileText size={24} /></div>
-              <div><p className="text-sm font-bold text-slate-400">Total Forms</p><p className="text-2xl font-black text-slate-800">{analytics.total_forms}</p></div>
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4 transition-colors duration-300">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center"><FileText size={24} /></div>
+              <div><p className="text-sm font-bold text-slate-400 dark:text-slate-500">Total Forms</p><p className="text-2xl font-black text-slate-800 dark:text-white">{analytics.total_forms}</p></div>
             </div>
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center"><CheckCircle2 size={24} /></div>
-              <div><p className="text-sm font-bold text-slate-400">Total Submissions</p><p className="text-2xl font-black text-slate-800">{analytics.total_submissions}</p></div>
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4 transition-colors duration-300">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center"><CheckCircle2 size={24} /></div>
+              <div><p className="text-sm font-bold text-slate-400 dark:text-slate-500">Total Submissions</p><p className="text-2xl font-black text-slate-800 dark:text-white">{analytics.total_submissions}</p></div>
             </div>
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center"><BarChart3 size={24} /></div>
-              <div><p className="text-sm font-bold text-slate-400">Active Workflows</p><p className="text-2xl font-black text-slate-800">{analytics.active_workflows}</p></div>
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4 transition-colors duration-300">
+              <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 flex items-center justify-center"><BarChart3 size={24} /></div>
+              <div><p className="text-sm font-bold text-slate-400 dark:text-slate-500">Active Workflows</p><p className="text-2xl font-black text-slate-800 dark:text-white">{analytics.active_workflows}</p></div>
             </div>
           </div>
         )}
@@ -178,22 +178,22 @@ export const Dashboard: React.FC = () => {
             <span>⚠️</span> Error: {error}. Is the FastAPI server running?
           </div>
         ) : forms.length === 0 ? (
-          <div className="bg-white border border-slate-200 rounded-3xl p-16 text-center shadow-sm">
-            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <FileText size={32} className="text-slate-400" />
+          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-16 text-center shadow-sm transition-colors duration-300">
+            <div className="w-20 h-20 bg-slate-50 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6">
+              <FileText size={32} className="text-slate-400 dark:text-slate-500" />
             </div>
-            <h3 className="text-2xl font-bold text-slate-800 mb-2">No forms yet</h3>
-            <p className="text-slate-500 font-medium mb-8 max-w-sm mx-auto">You haven't created any forms. Click the button below to get started building your first form.</p>
+            <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">No forms yet</h3>
+            <p className="text-slate-500 dark:text-slate-400 font-medium mb-8 max-w-sm mx-auto">You haven't created any forms. Click the button below to get started building your first form.</p>
             <button onClick={handleCreateNew} className="text-primary-600 font-bold hover:text-primary-700 underline underline-offset-4">Create your first form</button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {forms.map(form => (
-              <div key={form.id} className="bg-white/60 backdrop-blur-xl rounded-2xl border border-white/60 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden flex flex-col">
+              <div key={form.id} className="bg-white/60 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-white/60 dark:border-slate-700 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group overflow-hidden flex flex-col">
                 <div className="p-6 flex-1">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-primary-50 text-primary-600 rounded-xl flex items-center justify-center">
+                      <div className="w-12 h-12 bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-xl flex items-center justify-center">
                         <FileText size={24} />
                       </div>
                       <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">ID: {form.id}</span>
@@ -211,17 +211,16 @@ export const Dashboard: React.FC = () => {
                       <Trash2 size={18} />
                     </button>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-2 group-hover:text-primary-600 transition-colors">{form.title}</h3>
-                  <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
-                    <Calendar size={14} />
-                    {new Date(form.created_at).toLocaleDateString()}
+                  <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-1 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-1">{form.title}</h3>
+                  <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-1.5"><Calendar size={14} />{new Date(form.created_at).toLocaleDateString()}</div>
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-4 border-t border-white/40 divide-x divide-white/40 bg-white/40">
+                <div className="border-t border-slate-100 dark:border-slate-700 p-4 bg-slate-50/50 dark:bg-slate-800/50 grid grid-cols-4 divide-x divide-slate-100 dark:divide-slate-700">
                   <button 
                     onClick={() => handleCopyLink(form.id)}
-                    className={`p-4 flex flex-col items-center justify-center text-sm font-bold transition-colors gap-1 ${copiedId === form.id ? 'text-emerald-600 bg-emerald-50' : 'text-slate-600 hover:text-emerald-600 hover:bg-emerald-50'}`}
+                    className={`p-4 flex flex-col items-center justify-center text-sm font-bold transition-colors gap-1 ${copiedId === form.id ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20' : 'text-slate-600 dark:text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'}`}
                   >
                     {copiedId === form.id ? <CheckCircle2 size={18} /> : <LinkIcon size={18} />}
                     {copiedId === form.id ? 'Copied!' : 'Copy'}

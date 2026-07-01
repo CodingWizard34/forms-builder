@@ -14,8 +14,8 @@ import { CommandMenu } from './components/ui/CommandMenu';
 function App() {
   return (
     <ToastProvider>
-      <CommandMenu />
       <Router>
+        <CommandMenu />
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           

@@ -56,6 +56,26 @@ def get_forms(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), cu
     forms = db.query(models.Form).filter(models.Form.user_id == current_user.id).offset(skip).limit(limit).all()
     return forms
 
+@router.get("/analytics/overview")
+def get_analytics_overview(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    # Total forms
+    forms = db.query(models.Form).filter(models.Form.user_id == current_user.id).all()
+    total_forms = len(forms)
+    
+    # Total submissions
+    total_submissions = 0
+    active_workflows = 0
+    for form in forms:
+        total_submissions += db.query(models.Submission).filter(models.Submission.form_id == form.id).count()
+        if form.workflows and len(form.workflows) > 0:
+            active_workflows += len(form.workflows)
+            
+    return {
+        "total_forms": total_forms,
+        "total_submissions": total_submissions,
+        "active_workflows": active_workflows
+    }
+
 @router.get("/{form_id}", response_model=schemas.FormResponse)
 def get_form(form_id: str, db: Session = Depends(get_db)):
     form = db.query(models.Form).filter(models.Form.id == form_id).first()

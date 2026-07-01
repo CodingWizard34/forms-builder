@@ -10,6 +10,13 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     
+    # Profile Data
+    first_name = Column(String, nullable=True)
+    last_name = Column(String, nullable=True)
+    company = Column(String, nullable=True)
+    role = Column(String, nullable=True)
+    timezone = Column(String, nullable=True)
+    
     forms = relationship("Form", back_populates="owner")
 
 class Form(Base):

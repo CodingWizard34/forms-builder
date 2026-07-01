@@ -41,3 +41,16 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 @router.get("/me", response_model=schemas.UserResponse)
 def get_current_user_profile(current_user: models.User = Depends(auth.get_current_user)):
     return current_user
+
+@router.put("/me", response_model=schemas.UserResponse)
+def update_current_user_profile(
+    profile_data: schemas.UserProfileUpdate, 
+    current_user: models.User = Depends(auth.get_current_user),
+    db: Session = Depends(get_db)
+):
+    update_data = profile_data.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(current_user, key, value)
+    db.commit()
+    db.refresh(current_user)
+    return current_user

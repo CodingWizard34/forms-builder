@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getAuthHeaders, removeToken } from '../../utils/auth';
 import { PlusCircle, FileText, Calendar, ExternalLink, BarChart3, Trash2, User, Link as LinkIcon, CheckCircle2, Edit2 } from 'lucide-react';
 import { useToast } from '../ui/ToastContext';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 interface FormSummary {
   id: string;
@@ -21,6 +22,7 @@ export const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [analytics, setAnalytics] = useState<{total_forms: number, total_submissions: number, active_workflows: number} | null>(null);
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -40,6 +42,15 @@ export const Dashboard: React.FC = () => {
         const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/forms/`, {
           headers: getAuthHeaders()
         });
+        
+        // Fetch Analytics
+        const analyticsRes = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/forms/analytics/overview`, {
+          headers: getAuthHeaders()
+        });
+        if (analyticsRes.ok) {
+          setAnalytics(await analyticsRes.json());
+        }
+
         if (response.status === 401) {
           removeToken();
           navigate('/login');
@@ -111,11 +122,12 @@ export const Dashboard: React.FC = () => {
             <p className="text-slate-500 font-medium mt-2">Manage your forms and view submissions</p>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <ThemeToggle />
             {user && (
-              <div className="flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 font-medium">
+              <button onClick={() => navigate('/settings')} className="flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 font-medium hover:bg-slate-50 transition-colors">
                 <User size={18} className="text-primary-500" />
                 <span>{user.email}</span>
-              </div>
+              </button>
             )}
             <button 
               onClick={handleCreateNew}
@@ -135,6 +147,24 @@ export const Dashboard: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Analytics Cards */}
+        {analytics && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><FileText size={24} /></div>
+              <div><p className="text-sm font-bold text-slate-400">Total Forms</p><p className="text-2xl font-black text-slate-800">{analytics.total_forms}</p></div>
+            </div>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center"><CheckCircle2 size={24} /></div>
+              <div><p className="text-sm font-bold text-slate-400">Total Submissions</p><p className="text-2xl font-black text-slate-800">{analytics.total_submissions}</p></div>
+            </div>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center"><BarChart3 size={24} /></div>
+              <div><p className="text-sm font-bold text-slate-400">Active Workflows</p><p className="text-2xl font-black text-slate-800">{analytics.active_workflows}</p></div>
+            </div>
+          </div>
+        )}
 
         {loading ? (
           <div className="flex items-center justify-center py-20">

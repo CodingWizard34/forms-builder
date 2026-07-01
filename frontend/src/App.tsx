@@ -3,15 +3,18 @@ import { FormBuilder } from './components/builder/FormBuilder';
 import { LiveFormView } from './components/builder/LiveFormView';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { SubmissionsView } from './components/dashboard/SubmissionsView';
+import { Settings } from './components/dashboard/Settings';
 import { Login } from './components/auth/Login';
 import { Signup } from './components/auth/Signup';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 import { ToastProvider } from './components/ui/ToastContext';
+import { CommandMenu } from './components/ui/CommandMenu';
 
 function App() {
   return (
     <ToastProvider>
+      <CommandMenu />
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
@@ -27,6 +30,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dashboard/:id/submissions" element={<SubmissionsView />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/builder/:id" element={<FormBuilder />} />
           </Route>
         </Routes>

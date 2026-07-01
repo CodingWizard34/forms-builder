@@ -9,8 +9,20 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
+class UserProfileUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    company: Optional[str] = None
+    role: Optional[str] = None
+    timezone: Optional[str] = None
+
 class UserResponse(UserBase):
     id: int
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    company: Optional[str] = None
+    role: Optional[str] = None
+    timezone: Optional[str] = None
     class Config:
         from_attributes = True
 

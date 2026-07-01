@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "formbuilder"
     SQLALCHEMY_DATABASE_URI: str | None = None
+    DATABASE_URL: str | None = None
 
     class Config:
         case_sensitive = True
@@ -21,6 +22,11 @@ class Settings(BaseSettings):
     def database_url(self) -> str:
         if self.SQLALCHEMY_DATABASE_URI:
             return self.SQLALCHEMY_DATABASE_URI
+        if self.DATABASE_URL:
+            # Handle Render/Heroku postgres:// vs postgresql://
+            if self.DATABASE_URL.startswith("postgres://"):
+                return self.DATABASE_URL.replace("postgres://", "postgresql://", 1)
+            return self.DATABASE_URL
         # Default to a local SQLite file instead of Postgres
         return "sqlite:///./formbuilder.db"
 
